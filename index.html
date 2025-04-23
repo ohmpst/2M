@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,7 @@
             margin: 0;
             perspective: 1000px;
         }
-        
+
         .card-container {
             width: 350px;
             height: 500px;
@@ -23,8 +24,9 @@
             transform-style: preserve-3d;
             transition: transform 1s;
             cursor: pointer;
+            display: none; /* ซ่อนการ์ดไว้จนกว่าจะใส่รหัสถูก */
         }
-        
+
         .card {
             width: 100%;
             height: 100%;
@@ -39,28 +41,28 @@
             padding: 20px;
             box-sizing: border-box;
         }
-        
+
         .front {
             background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
             transform: rotateY(0deg);
         }
-        
+
         .back {
             background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
             transform: rotateY(180deg);
         }
-        
+
         .card-container.flipped {
             transform: rotateY(180deg);
         }
-        
+
         h1 {
             color: #fff;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
             margin-bottom: 20px;
             text-align: center;
         }
-        
+
         p {
             color: #fff;
             line-height: 1.6;
@@ -68,7 +70,7 @@
             text-align: center;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
-        
+
         .heart {
             color: #e91e63;
             font-size: 60px;
@@ -77,20 +79,20 @@
             margin: 20px 0;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
-        
+
         @keyframes beat {
             to {
                 transform: scale(1.2);
             }
         }
-        
+
         .photos {
             display: flex;
             justify-content: space-around;
             width: 100%;
             margin: 20px 0;
         }
-        
+
         .photo {
             width: 80px;
             height: 80px;
@@ -100,7 +102,7 @@
             border: 3px solid white;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
-        
+
         .message {
             background-color: rgba(255, 255, 255, 0.2);
             padding: 15px;
@@ -108,7 +110,7 @@
             margin-top: 20px;
             backdrop-filter: blur(5px);
         }
-        
+
         .stamp {
             position: absolute;
             top: 20px;
@@ -125,7 +127,7 @@
             transform: rotate(15deg);
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
-        
+
         .confetti {
             position: absolute;
             width: 10px;
@@ -133,9 +135,71 @@
             background-color: #f00;
             opacity: 0;
         }
+
+        /* สไตล์หน้าล็อค */
+        #lockScreen {
+            text-align: center;
+            padding: 40px;
+            background-color: #fff0f5;
+            width: 100vw;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+        }
+
+        #passwordInput {
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            margin: 10px 0;
+            width: 200px;
+        }
+
+        #unlockButton {
+            padding: 10px 20px;
+            font-size: 1em;
+            background: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #unlockButton:hover {
+            background: #c2185b;
+            transform: scale(1.05);
+        }
+
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 100;
+            display: none;
+        }
+
+        .music-control i {
+            font-size: 24px;
+            color: #e91e63;
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
+
 <body>
+    <!-- การ์ดหลัก -->
     <div class="card-container" id="cardContainer">
         <div class="card front">
             <div class="stamp">2M 🐱</div>
@@ -148,7 +212,7 @@
             </div>
             <p>คลิกที่การ์ดเพื่อเปิด</p>
         </div>
-        
+
         <div class="card back">
             <h1> 💗 <span id="years">2/</span> M With you</h1>
             <div class="message">
@@ -161,26 +225,99 @@
         </div>
     </div>
 
+    <!-- หน้าล็อค -->
+    <div id="lockScreen">
+        <h2>ใส่รหัสวันเกิดของใครดีน้า(วัน-เดือน) Ex.0000 💕</h2>
+        <input type="password" id="passwordInput" placeholder="เช่น 8888">
+        <br><br>
+        <button id="unlockButton" onclick="checkPassword()">เปิดการ์ด</button>
+    </div>
+
+    <!-- ระบบเสียง -->
+    <audio id="bgMusic" loop>
+        <source src="bg-music.mp3" type="audio/mpeg">
+        <!-- เปลี่ยนเป็นไฟล์เพลงของคุณ -->
+    </audio>
+
+    <div class="music-control" id="musicControl" onclick="toggleMusic()">
+        <i class="fas fa-music"></i>
+    </div>
+
     <script>
         // ตั้งค่าจำนวนปีครบรอบ
-        const anniversaryYear = 2 // เปลี่ยนเป็นจำนวนปีครบรอบของคุณ
+        const anniversaryYear = 2; // เปลี่ยนเป็นจำนวนปีครบรอบของคุณ
         document.getElementById('years').textContent = anniversaryYear;
-        
+
+        // ตัวแปรควบคุมเสียง
+        let musicPlaying = false;
+        const bgMusic = document.getElementById('bgMusic');
+        const musicControl = document.getElementById('musicControl');
+
         // เปิดปิดการ์ดเมื่อคลิก
         const cardContainer = document.getElementById('cardContainer');
         cardContainer.addEventListener('click', function() {
             this.classList.toggle('flipped');
-            
+
             // สร้าง confetti เมื่อเปิดการ์ด
             if (this.classList.contains('flipped')) {
                 createConfetti();
+                
+                // เล่นเพลงเมื่อเปิดการ์ด (ถ้ายังไม่เล่น)
+                if (!musicPlaying) {
+                    playMusic();
+                }
             }
         });
-        
+
+        // ฟังก์ชันตรวจสอบรหัสผ่าน
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            const correctPassword = '0805'; // เปลี่ยนรหัสตรงนี้ได้ตามต้องการ
+
+            if (input === correctPassword) {
+                document.getElementById('lockScreen').style.display = 'none';
+                document.getElementById('cardContainer').style.display = 'block';
+                musicControl.style.display = 'block';
+                
+                // พยายามเล่นเพลงอัตโนมัติหลังจากผู้ใช้โต้ตอบ
+                setTimeout(() => {
+                    playMusic();
+                }, 500);
+            } else {
+                alert('รหัสไม่ถูกต้องเธอมั่วนะครับที่รัก 💬');
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        // ฟังก์ชันเล่นเพลง
+        function playMusic() {
+            bgMusic.volume = 0.5; // ตั้งค่าระดับเสียง (0.0 - 1.0)
+            bgMusic.play()
+                .then(() => {
+                    musicPlaying = true;
+                    musicControl.innerHTML = '<i class="fas fa-pause"></i>';
+                })
+                .catch(error => {
+                    console.log("การเล่นเพลงอัตโนมัติถูกบล็อก:", error);
+                });
+        }
+
+        // ฟังก์ชันเปิด/ปิดเพลง
+        function toggleMusic() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicControl.innerHTML = '<i class="fas fa-music"></i>';
+            } else {
+                bgMusic.play();
+                musicControl.innerHTML = '<i class="fas fa-pause"></i>';
+            }
+            musicPlaying = !musicPlaying;
+        }
+
         // สร้าง confetti
         function createConfetti() {
             const colors = ['#e91e63', '#00bcd4', '#ffeb3b', '#4caf50', '#9c27b0'];
-            
+
             for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
@@ -189,31 +326,31 @@
                 confetti.style.top = Math.random() * 100 + 'vh';
                 confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
                 document.body.appendChild(confetti);
-                
+
                 animateConfetti(confetti);
             }
         }
-        
+
         function animateConfetti(element) {
             let posY = parseFloat(element.style.top);
             let angle = Math.random() * 360;
             let speed = Math.random() * 3 + 2;
             let spin = Math.random() > 0.5 ? 2 : -2;
             let opacity = 1;
-            
+
             element.style.opacity = opacity;
-            
+
             const fall = setInterval(() => {
                 posY += speed;
                 angle += spin;
-                
+
                 element.style.top = posY + 'px';
                 element.style.transform = 'rotate(' + angle + 'deg)';
-                
+
                 if (posY > window.innerHeight) {
                     opacity -= 0.05;
                     element.style.opacity = opacity;
-                    
+
                     if (opacity <= 0) {
                         clearInterval(fall);
                         element.remove();
@@ -221,39 +358,13 @@
                 }
             }, 20);
         }
-    </script>
-</body>
-<body>
-    <!-- 🔐 Lock Screen ก่อนเข้าการ์ด -->
-    <div id="lockScreen" style="text-align:center; padding: 40px; background-color:#fff0f5; width:100vw; height:100vh; position:fixed; top:0; left:0; display:flex; justify-content:center; align-items:center; z-index:9999;">
-        <div>
-            <h2>ใส่รหัสวันเกิดของใครดีน้าวันกับเดือน Ex0000 💕</h2>
-            <input type="password" id="passwordInput" placeholder="เช่น 0000" style="padding: 10px; font-size: 1em; border-radius: 10px; border: 1px solid #ccc;">
-            <br><br>
-            <button onclick="checkPassword()" style="padding: 10px 20px; font-size: 1em; background: #e91e63; color: white; border: none; border-radius: 10px; cursor: pointer;">เปิดการ์ด</button>
-        </div>
-    </div>
 
-    <!-- 🎉 การ์ดครบรอบที่คุณเขียน -->
-    <div class="card-container" id="cardContainer" style="display: none;">
-        <!-- ... ใส่โค้ดการ์ดของคุณตรงนี้เหมือนเดิม ... -->
-        <!-- (โค้ดของคุณจะอยู่ที่นี่ ไม่มีการเปลี่ยนแปลงใด ๆ ยกเว้นเพิ่ม display:none) -->
-        <!-- จากที่คุณโพสต์มา เราจะไม่ลบหรือเปลี่ยนแปลงการ์ด -->
-    </div>
-
-    <script>
-        function checkPassword() {
-            const input = document.getElementById('passwordInput').value;
-            const correctPassword = '0805'; // << เปลี่ยนรหัสตรงนี้ได้ตามต้องการ
-
-            if (input === correctPassword) {
-                document.getElementById('lockScreen').style.display = 'none';
-                document.getElementById('cardContainer').style.display = 'block';
-            } else {
-                alert('รหัสไม่ถูกต้องเธอมั่วนะครับที่รัก 💬');
+        // อนุญาตให้กด Enter เพื่อส่งรหัส
+        document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
             }
-        }
+        });
     </script>
 </body>
-
 </html>
