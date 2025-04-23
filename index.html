@@ -223,4 +223,37 @@
         }
     </script>
 </body>
+<body>
+    <!-- 🔐 Lock Screen ก่อนเข้าการ์ด -->
+    <div id="lockScreen" style="text-align:center; padding: 40px; background-color:#fff0f5; width:100vw; height:100vh; position:fixed; top:0; left:0; display:flex; justify-content:center; align-items:center; z-index:9999;">
+        <div>
+            <h2>ใส่รหัสวันเกิดของใครดีน้าวันกับเดือน Ex0000 💕</h2>
+            <input type="password" id="passwordInput" placeholder="เช่น 0000" style="padding: 10px; font-size: 1em; border-radius: 10px; border: 1px solid #ccc;">
+            <br><br>
+            <button onclick="checkPassword()" style="padding: 10px 20px; font-size: 1em; background: #e91e63; color: white; border: none; border-radius: 10px; cursor: pointer;">เปิดการ์ด</button>
+        </div>
+    </div>
+
+    <!-- 🎉 การ์ดครบรอบที่คุณเขียน -->
+    <div class="card-container" id="cardContainer" style="display: none;">
+        <!-- ... ใส่โค้ดการ์ดของคุณตรงนี้เหมือนเดิม ... -->
+        <!-- (โค้ดของคุณจะอยู่ที่นี่ ไม่มีการเปลี่ยนแปลงใด ๆ ยกเว้นเพิ่ม display:none) -->
+        <!-- จากที่คุณโพสต์มา เราจะไม่ลบหรือเปลี่ยนแปลงการ์ด -->
+    </div>
+
+    <script>
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            const correctPassword = '0805'; // << เปลี่ยนรหัสตรงนี้ได้ตามต้องการ
+
+            if (input === correctPassword) {
+                document.getElementById('lockScreen').style.display = 'none';
+                document.getElementById('cardContainer').style.display = 'block';
+            } else {
+                alert('รหัสไม่ถูกต้องเธอมั่วนะครับที่รัก 💬');
+            }
+        }
+    </script>
+</body>
+
 </html>
